@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# Elastic log template
+host=$1
+curl -XPUT $host:9200/_template/vulcain_logs -d '
+{
+  "template": "logs-demo-*",
+    "mappings": {
+      "fluentd": {
+        "properties": {
+          "@timestamp": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+          },
+          "action": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "correlationId": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "error": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "message": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "source": {
+            "type": "string"
+          },
+          "stack": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "long"
+          },
+          "traceId": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "version": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+      }
+    }
+  }'
+
