@@ -2,6 +2,12 @@
 
 # Elastic log template
 host=$1
+echo ">> Waiting for elasticsearch" 
+until [ $(curl -s -o /dev/null -w "%{http_code}" http://$host:9200/_cat/indices?v) = "200" ]; do
+    printf '.'
+    sleep 2
+done  
+
 curl -XPUT $host:9200/_template/vulcain_logs -d '
 {
   "template": "logs-demo-*",

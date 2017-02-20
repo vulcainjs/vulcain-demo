@@ -54,11 +54,28 @@ eval $(docker-machine env $host)
 if [ "$mode" == "init"  ]; then
     initSwarm
 fi
-docker-machine ssh $host "bash -s " < ./init.sh $cluster $token $hostIp
+
+docker stack deploy --compose-file docker-compose.yml vulcain
+docker run -d -p 24244:24244 --net=host \
+      --name fluentd-agent \
+      -e ELASTIC_URL=$hostIp \
+      -e ELASTIC_PORT=9200 \
+      -e VULCAIN_ENV=$cluster \
+      vulcain/fluentd:1.0.0 || true
+
+# docker service create --name statsd-agent --network net-$cluster --mode global \
+#        --constraint node.labels.vulcain.environment==$cluster \
+#        --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock  \
+#        -e ENV=$cluster \
+#        -e INFLUXDB_SERVERS="'http://influxdb:8086'" \
+#        -e INFLUXDB_USER="admin" \
+#        -e INFLUXDB_PASSWORD="vulcain" \
+#        -p 8125:8125/udp \
+#        vulcain/telegraf:1.0.0 || true
 
 # Register
 if [ "$mode" != "update" ]; then
-    echo ">> Waiting for vulcain-ui up" 
+    echo ">> Waiting for vulcain-ui" 
     until [ $(curl -s -o /dev/null -w "%{http_code}" http://$hostIp:8080/health) = "200" ]; do
         printf '.'
         sleep 2
@@ -92,14 +109,13 @@ cat >data.json <<-EOF
     }
 }
 EOF
-
     curl -H "Authorization: ApiKey $token" -XPOST http://$hostIp:8080/api/ \
      -H "Content-Type: application/json" \
      --data "@data.json"
 
     rm data.json
 
-    echo
+    echo 
     echo ">> Updating elastic search template"
     ./elastic-template.sh $hostIp
 
