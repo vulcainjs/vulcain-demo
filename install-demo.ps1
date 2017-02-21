@@ -34,11 +34,11 @@ docker run -d -p 24244:24244 --net=host `
         vulcain/telegraf:1.0.0
 
 # Register
-docker run -ti --rm -v ${DOCKER_CERT_PATH}:/certs vulcain/install-demo $hostIp $cluster
+docker run -ti --rm -v ${Env:DOCKER_CERT_PATH}:/certs vulcain/install-demo $hostIp $cluster
 Write-Host
 Write-Host "Environment $cluster created successfully."
 Write-Host
 
-vulcain config --profile demo --token ab690d50-e85d-11e6-b767-8f41c48a4483 --template NodeMicroService --team vulcain-demo --server $(docker-machine ip vulcain):8080
+vulcain config --profile demo --token ab690d50-e85d-11e6-b767-8f41c48a4483 --template NodeMicroService --team vulcain-demo --server ${hostIp}:8080
 
 Write-Host "Vulcain UI is available at http://${hostIp}:8080 user: admin/vulcain"
