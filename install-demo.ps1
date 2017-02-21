@@ -1,20 +1,18 @@
-#!/bin/bash
-set -e
 
-cluster="demo"
-host=${1:-vulcain}
+$cluster="demo"
+$host="vulcain"
 
-eval $(docker-machine env $host)
-hostIp="$(docker-machine ip $host)"
+docker-machine.exe env --shell=powershell dev | Invoke-Expression
+$hostIp = docker-machine ip $host
 
 # Set context
-echo ">> Initializing swarm cluster as manager"
-docker swarm init --advertise-addr $hostIp:2377 || true
+Write-Host ">> Initializing swarm cluster as manager"
+docker swarm init --advertise-addr $hostIp:2377
 
 docker node update --label-add vulcain.environment=$cluster $host
 
-echo ">> Creating cluster network"
-docker network create -d overlay --attachable --opt secure net-$cluster || true
+Write-Host ">> Creating cluster network"
+docker network create -d overlay --attachable --opt secure net-$cluster
 
 docker stack deploy --compose-file docker-compose.yml vulcain
 
@@ -37,10 +35,10 @@ docker run -d -p 24244:24244 --net=host \
 
 # Register
 docker run -ti --rm -v $DOCKER_CERT_PATH:/certs vulcain/install-demo $hostIp $cluster
-echo
-echo "Environment $cluster created successfully."
-echo
+Write-Host
+Write-Host "Environment $cluster created successfully."
+Write-Host
 
 vulcain config --profile demo --token ab690d50-e85d-11e6-b767-8f41c48a4483 --template NodeMicroService --team vulcain-demo --server $(docker-machine ip vulcain):8080
 
-echo Vulcain UI is available at http://$hostIp:8080 user: admin/vulcain
+Write-Host "Vulcain UI is available at http://$hostIp:8080 user: admin/vulcain"
