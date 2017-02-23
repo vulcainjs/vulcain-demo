@@ -39,6 +39,6 @@ Write-Host
 Write-Host "Environment $cluster created successfully."
 Write-Host
 
-vulcain config --profile demo --token ab690d50-e85d-11e6-b767-8f41c48a4483 --template NodeMicroService --team vulcain-demo --server $(docker-machine ip vulcain):8080
+vulcain config --profile demo --token ab690d50-e85d-11e6-b767-8f41c48a4483 --template NodeMicroService --team vulcain-demo --server ${hostIp}:8080
 
 Write-Host "Vulcain UI is available at http://${hostIp}:8080 user: admin/vulcain"
