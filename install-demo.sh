@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 cluster="demo"
 host=${1:-vulcain}
@@ -36,7 +36,13 @@ docker run -d -p 24244:24244 --net=host \
         vulcain/telegraf:1.0.0 || true
 
 # Register
-docker run -ti --rm -v $DOCKER_CERT_PATH:/certs vulcain/install-demo $hostIp $cluster
+docker rm setup || true
+docker create --name setup -ti --rm -e hostIp=$hostIp -e cluster=$cluster -e token=ab690d50-e85d-11e6-b767-8f41c48a4483 vulcain/install-demo
+docker cp /Users/alain/.docker/machine/machines/nuc/cert.pem setup:/certs/cert.pem
+docker cp /Users/alain/.docker/machine/machines/nuc/ca.pem setup:/certs/ca.pem
+docker cp /Users/alain/.docker/machine/machines/nuc/key.pem setup:/certs/key.pem
+docker start -i setup
+
 echo
 echo "Environment $cluster created successfully."
 echo
