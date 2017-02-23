@@ -34,7 +34,7 @@ docker run -d -p 24244:24244 --net=host `
         vulcain/telegraf:1.0.0
 
 # Register
-docker run -ti --rm -v ${DOCKER_CERT_PATH}:/certs vulcain/install-demo $hostIp $cluster
+docker run -ti --rm -v ${Env:DOCKER_CERT_PATH}:/certs vulcain/install-demo $hostIp $cluster
 Write-Host
 Write-Host "Environment $cluster created successfully."
 Write-Host
