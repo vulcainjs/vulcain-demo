@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: vulcain-ui
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: vulcain-ui
+    spec:
+      containers:
+      - env:
+        - name: VULCAIN_TENANT
+          value: vulcain
+        - name: VULCAIN_ENV
+          value: system
+        image: vulcain/vulcain-ui:1.1.7
+        name: vulcain-ui
+        imagePullPolicy: Always
+      restartPolicy: Always
+     

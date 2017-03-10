@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: influxdb
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: influxdb
+    spec:
+      containers:
+      - env:
+        - name: ADMIN_USER
+          value: admin
+        - name: INFLUXDB_INIT_PWD
+          value: vulcain
+        image: tutum/influxdb
+        name: influxdb
+        ports:
+        - containerPort: 8083
+          protocol: TCP
+        - containerPort: 8086
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+status: {}

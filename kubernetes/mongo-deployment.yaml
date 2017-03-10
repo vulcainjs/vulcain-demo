@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: mongo
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: mongo
+    spec:
+      containers:
+      - image: mongo:3.4
+        name: mongo
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -19,14 +19,13 @@ cat >data.json <<-EOF
         "name":"$cluster",
         "type":"swarm",
         "description":"Environment $cluster",
-        "internalClusterAddress": "${hostIp}",
-        "tenants": [],
+        "address":"${hostIp}:2376",
+        "tlsKey":"$key",
+        "tlsCert":"$cert",
+        "tlsCaCert":"$ca",
         "engine":{
             "__schema":"SwarmDefinition",
-            "ip":"${hostIp}:2376",
-            "tlsKey":"$key",
-            "tlsCert":"$cert",
-            "tlsCaCert":"$ca"
+            "internalClusterAddress": "${hostIp}"
         },
         "namings": {
             "__schema": "Namings",
