@@ -1,6 +1,7 @@
-
-$cluster="demo"
-$hostName="vulcain"
+param (
+	[Parameter(Mandatory=$true)][string]$hostname,
+	[string]$cluster = "demo"
+)
 
 docker-machine.exe env --shell=powershell $hostName | Invoke-Expression
 $hostIp = docker-machine ip $hostName
