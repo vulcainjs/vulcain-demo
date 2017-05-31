@@ -1,5 +1,5 @@
 param (
-	[Parameter(Mandatory=$true)][string]$hostname,
+	[Parameter(Mandatory=$true)][string]$hostName,
 	[string]$cluster = "demo"
 )
 
@@ -36,9 +36,9 @@ docker run -d -p 24244:24244 --net=host `
 
 # Register
 docker create --name setup -ti --rm -e hostIp=$hostIp -e cluster=$cluster -e token=ab690d50-e85d-11e6-b767-8f41c48a4483 vulcain/install-demo
-docker cp $home/.docker/machine/machines/$host/cert.pem setup:/certs/cert.pem
-docker cp $home/.docker/machine/machines/$host/ca.pem setup:/certs/ca.pem
-docker cp $home/.docker/machine/machines/$host/key.pem setup:/certs/key.pem
+docker cp $home\.docker\machine\machines\$hostName\cert.pem setup:/certs/cert.pem
+docker cp $home\.docker\machine\machines\$hostName\ca.pem setup:/certs/ca.pem
+docker cp $home\.docker\machine\machines\$hostName\key.pem setup:/certs/key.pem
 docker start -i setup
 
 Write-Host
